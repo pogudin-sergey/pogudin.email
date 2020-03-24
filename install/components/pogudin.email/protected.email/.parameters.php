@@ -28,15 +28,11 @@ $arComponentParameters = array(
             "VALUES" => $aTypes,
             "REFRESH" => "N",
         ),
-        "RAND_STRING" => Array(
+        "CLASS" => Array(
             "PARENT" => "MAIN",
-            "NAME" => GetMessage("POGUDIN_PROTECTED_EMAIL_PARAM_RAND_STRING"),
+            "NAME" => GetMessage("POGUDIN_PROTECTED_EMAIL_PARAM_CLASS"),
             "TYPE" => "STRING",
-            "DEFAULT" => randString(
-                10,
-                "abcdefghijklnmopqrstuvwxyzABCDEFGHIJKLNMOPQRSTUVWXYZ",
-                "0123456789"
-            )
+            "DEFAULT" => "",
         ),
         //"CACHE_TIME"  =>  Array(),
     )

@@ -1,4 +1,6 @@
 <?php
+use \Bitrix\Main;
+
 IncludeModuleLangFile(__FILE__);
 
 class CBitrixComponentPogudinEmail extends CBitrixComponent
@@ -19,11 +21,6 @@ class CBitrixComponentPogudinEmail extends CBitrixComponent
             $arParams['RUN_COMPONENT'] = false;
         }
 
-        if (strlen($arParams['RAND_STRING']) == 0) {
-            ShowError(GetMessage('POGUDIN_PROTECTED_EMAIL_CLASS_RANDSTRINGMISS'));
-            $arParams['RUN_COMPONENT'] = false;
-        }
-
         if (!in_array($arParams['TYPE'], $aAllowType))
             $arParams['TYPE'] = $aAllowType[0];
 
@@ -35,10 +32,13 @@ class CBitrixComponentPogudinEmail extends CBitrixComponent
         if (!$this->arParams['RUN_COMPONENT'])
             return false;
 
+        $sSiteId = $this->getSiteId();
+        $salt = Main\Config\Option::get('main', 'server_uniq_id', $sSiteId.SITE_TEMPLATE_PATH, $this->getSiteId());
+        $this->arResult["VARNAME"] = md5(serialize($this->arParams) . $salt);
+
         $sEmailExplode = explode('@', $this->arParams['EMAIL']);
         $this->arResult["EMAIL_ENCODE_USERNAME"] = base64_encode($sEmailExplode[0]);
         $this->arResult["EMAIL_ENCODE_DOMAIN"] = base64_encode($sEmailExplode[1]);
-        $this->arResult["VARNAME"] = md5($this->arParams['RAND_STRING']);
         $this->includeComponentTemplate();
     }
 }

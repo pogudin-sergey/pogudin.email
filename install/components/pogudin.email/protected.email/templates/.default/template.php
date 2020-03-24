@@ -1,7 +1,7 @@
 <?php
 $this->setFrameMode(true);
 $strContID = 'contprotect_'.$this->randString();
-$class = (strlen($arParams['CLASS']) > 0) ? " class={$arParams['CLASS']}" : '';
+$class = (strlen($arParams['CLASS']) > 0) ? " class=\"{$arParams['CLASS']}\"" : '';
 
 if ($arParams['TYPE'] == 'LINK') {
     ?><a href="#"<?=$class?> id="<?=$arResult['VARNAME']?>"></a><?

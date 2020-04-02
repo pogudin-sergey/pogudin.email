@@ -63,8 +63,8 @@ class pogudin_email extends CModule
 			$eventManager = \Bitrix\Main\EventManager::getInstance();
 
 			// Spam
-			//$eventManager->registerEventHandler("form", "onBeforeResultAdd", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
-			//$eventManager->registerEventHandler("main", "OnEpilog", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "OnEpilog");
+			$eventManager->registerEventHandler("form", "onBeforeResultAdd", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
+			$eventManager->registerEventHandler("main", "OnEpilog", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "OnEpilog");
 
 			return true;
 		}
@@ -76,8 +76,8 @@ class pogudin_email extends CModule
 		$this->errors = false;
 
 		$eventManager = \Bitrix\Main\EventManager::getInstance();
-		//$eventManager->unRegisterEventHandler("form", "onBeforeResultAdd", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
-		//$eventManager->unRegisterEventHandler("main", "OnEpilog", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "OnEpilog");
+		$eventManager->unRegisterEventHandler("form", "onBeforeResultAdd", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
+		$eventManager->unRegisterEventHandler("main", "OnEpilog", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "OnEpilog");
 
 		UnRegisterModule(self::MODULE_ID);
 

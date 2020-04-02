@@ -5,9 +5,9 @@ if(class_exists("pogudin_email")) return;
 
 class pogudin_email extends CModule
 {
-	var $MODULE_ID = "pogudin.email";
-    var $MODULE_CODE_LANG = "POGUDIN_EMAIL_";
-    var $MODULE_STRUCTURE = "\\Pogudin\\Email";
+	const MODULE_ID = "pogudin.email";
+    const MODULE_CODE_LANG = "POGUDIN_EMAIL_";
+	const MODULE_STRUCTURE = "\\Pogudin\\Email";
 
 	var $MODULE_PATH;
 	var $MODULE_VERSION;
@@ -43,7 +43,7 @@ class pogudin_email extends CModule
 	}
 
     function GetMessage($name) {
-        return GetMessage($this->MODULE_CODE_LANG . $name);
+        return GetMessage(self::MODULE_CODE_LANG . $name);
     }
 
 	function InstallDB($arParams = array())
@@ -58,9 +58,13 @@ class pogudin_email extends CModule
 		}
 		else
 		{
-			RegisterModule($this->MODULE_ID);
-			CModule::IncludeModule($this->MODULE_ID);
-			//RegisterModuleDependences("main", "OnMailEventSubscriptionDisable", $this->MODULE_ID, "PogudinEmail\\Subscription", "onMailEventSubscriptionDisable");
+			RegisterModule(self::MODULE_ID);
+
+			$eventManager = \Bitrix\Main\EventManager::getInstance();
+
+			// Spam
+			$eventManager->registerEventHandler("form", "onBeforeResultAdd", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
+			$eventManager->registerEventHandler("main", "OnEpilog", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "OnEpilog");
 
 			return true;
 		}
@@ -71,11 +75,11 @@ class pogudin_email extends CModule
 		global $DB, $DBType, $APPLICATION;
 		$this->errors = false;
 
-		//CModule::IncludeModule($this->MODULE_ID);
+		$eventManager = \Bitrix\Main\EventManager::getInstance();
+		$eventManager->unRegisterEventHandler("form", "onBeforeResultAdd", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
+		$eventManager->unRegisterEventHandler("main", "OnEpilog", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "OnEpilog");
 
-		//UnRegisterModuleDependences($this->MODULE_ID, "OnAfterRecipientClick", $this->MODULE_ID, "Bitrix\\Sender\\Internals\\ConversionHandler", "onAfterRecipientClick");
-
-		UnRegisterModule($this->MODULE_ID);
+		UnRegisterModule(self::MODULE_ID);
 
 		if($this->errors !== false)
 		{
@@ -103,7 +107,7 @@ class pogudin_email extends CModule
 	function DoInstall()
 	{
 		global $DB, $DOCUMENT_ROOT, $APPLICATION, $step;
-		$POST_RIGHT = $APPLICATION->GetGroupRight($this->MODULE_ID);
+		$POST_RIGHT = $APPLICATION->GetGroupRight(self::MODULE_ID);
 		if($POST_RIGHT == "W")
 		{
 			$step = IntVal($step);
@@ -126,7 +130,7 @@ class pogudin_email extends CModule
 	function DoUninstall()
 	{
 		global $DB, $DOCUMENT_ROOT, $APPLICATION, $step;
-		$POST_RIGHT = $APPLICATION->GetGroupRight($this->MODULE_ID);
+		$POST_RIGHT = $APPLICATION->GetGroupRight(self::MODULE_ID);
 		if($POST_RIGHT == "W")
 		{
 			$step = IntVal($step);

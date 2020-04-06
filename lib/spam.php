@@ -69,4 +69,31 @@ Class Spam
         </script>
         <?
     }
+
+    /**
+     * Reject forms without Javascript User Support
+     */
+    function formOnBeforeResultAdd($WEB_FORM_ID, &$arFields, &$arrVALUES)
+    {
+        global $APPLICATION;
+
+        if (!in_array($WEB_FORM_ID, self::FORM_ALLOW)) {
+            return true;
+        }
+
+        if (\CForm::GetDataByID($WEB_FORM_ID,
+            $form,
+            $questions,
+            $answers
+        )) {
+            if (
+                !array_key_exists(self::SESSION_KEY_NAME, $_SESSION) ||
+                !array_key_exists(self::FORM_INPUT_NAME, $_POST) ||
+                $_SESSION[self::SESSION_KEY_NAME] !== $_POST[self::FORM_INPUT_NAME]
+            ) {
+                Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", "__spam_form.log");
+                $APPLICATION->ThrowException('You are spamer!');
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 IncludeModuleLangFile(__FILE__);
 
 if(class_exists("pogudin_email")) return;
@@ -6,7 +6,7 @@ if(class_exists("pogudin_email")) return;
 class pogudin_email extends CModule
 {
 	const MODULE_ID = "pogudin.email";
-    const MODULE_CODE_LANG = "POGUDIN_EMAIL_";
+	const MODULE_CODE_LANG = "POGUDIN_EMAIL_";
 	const MODULE_STRUCTURE = "\\Pogudin\\Email";
 
 	var $MODULE_PATH;

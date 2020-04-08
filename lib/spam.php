@@ -1,5 +1,5 @@
-<?
-namespace \Pogudin\Email\Expansion;
+<?php
+namespace Pogudin\Email;
 
 /*
  * Antispam system
@@ -12,7 +12,6 @@ Class Spam
 {
     const FORM_INPUT_NAME = 'spam_key_svc514vd9ivj5o4xzfg9swj';
     const SESSION_KEY_NAME = 'pogudin_expansion_spam_key_value';
-    const FORM_ALLOW = array(3);
 
     function getCurrentKeyValue() {
         if (empty($_SESSION[self::SESSION_KEY_NAME])) {
@@ -22,15 +21,16 @@ Class Spam
         return $_SESSION[self::SESSION_KEY_NAME];
     }
 
-	function OnEpilog()
+	static function OnEpilog()
     {
-
+        if (!defined('ADMIN_SECTION') || ADMIN_SECTION !== true)
+	        static::render();
 	}
 
     /**
      * Add additional input field in forms
      */
-    function render() {
+    static function render() {
         ?>
         <script>
             (function (window, document) {
@@ -73,27 +73,17 @@ Class Spam
     /**
      * Reject forms without Javascript User Support
      */
-    function formOnBeforeResultAdd($WEB_FORM_ID, &$arFields, &$arrVALUES)
+    static function formOnBeforeResultAdd($WEB_FORM_ID, &$arFields, &$arrVALUES)
     {
         global $APPLICATION;
 
-        if (!in_array($WEB_FORM_ID, self::FORM_ALLOW)) {
-            return true;
-        }
-
-        if (\CForm::GetDataByID($WEB_FORM_ID,
-            $form,
-            $questions,
-            $answers
-        )) {
-            if (
-                !array_key_exists(self::SESSION_KEY_NAME, $_SESSION) ||
-                !array_key_exists(self::FORM_INPUT_NAME, $_POST) ||
-                $_SESSION[self::SESSION_KEY_NAME] !== $_POST[self::FORM_INPUT_NAME]
-            ) {
-                Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", "__spam_form.log");
-                $APPLICATION->ThrowException('You are spamer!');
-            }
-        }
+	    if (
+		    !array_key_exists(self::SESSION_KEY_NAME, $_SESSION) ||
+		    !array_key_exists(self::FORM_INPUT_NAME, $_POST) ||
+		    $_SESSION[self::SESSION_KEY_NAME] !== $_POST[self::FORM_INPUT_NAME]
+	    ) {
+		    Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", "__spam_form.log");
+		    $APPLICATION->ThrowException('You are spamer!');
+	    }
     }
 }

@@ -10,80 +10,82 @@ use Bitrix\Main as Main;
 
 Class Spam
 {
-    const FORM_INPUT_NAME = 'spam_key_svc514vd9ivj5o4xzfg9swj';
-    const SESSION_KEY_NAME = 'pogudin_expansion_spam_key_value';
+	const SESSION_KEY_NAME = 'pogudin_expansion_spam_key_value';
 
-    function getCurrentKeyValue() {
-        if (empty($_SESSION[self::SESSION_KEY_NAME])) {
-            $_SESSION[self::SESSION_KEY_NAME] = randString(16);
-        }
-
-        return $_SESSION[self::SESSION_KEY_NAME];
-    }
-
-	static function OnEpilog()
-    {
-        if (!defined('ADMIN_SECTION') || ADMIN_SECTION !== true)
-	        static::render();
+	static function getRandString() {
+		return randString(rand(6,32));
 	}
 
-    /**
-     * Add additional input field in forms
-     */
-    static function render() {
-        ?>
-        <script>
-            (function (window, document) {
-                var input_name = "<?=self::FORM_INPUT_NAME?>";
+	static function getCurrentKeyValue() {
+		if (empty($_SESSION[self::SESSION_KEY_NAME])) {
+			$_SESSION[self::SESSION_KEY_NAME] = self::getRandString();
+		}
 
-                function pogudinAntiSpam() {
-                    var forms = document.querySelectorAll("form");
-                    forms.forEach(function (form) {
-                        var input = form.querySelector("input[name='"+input_name+"']");
-                        if (input === null) {
-                            var new_input = document.createElement('input');
-                            new_input.name = input_name;
-                            new_input.type = "hidden";
-                            new_input.value = "<?=self::getCurrentKeyValue()?>";
-                            form.appendChild(new_input);
-                        }
-                    })
-                }
+		return $_SESSION[self::SESSION_KEY_NAME];
+	}
 
-                document.addEventListener("DOMContentLoaded", function () {
-                    pogudinAntiSpam();
-                });
+	static function OnEpilog()
+	{
+		if (!defined('ADMIN_SECTION') || ADMIN_SECTION !== true)
+			static::render();
+	}
 
-                if (typeof BX !== "undefined") {
-                    BX.addCustomEvent(window, 'onAjaxSuccess', function () {
-                        pogudinAntiSpam();
-                    });
-                }
+	/**
+	 * Add additional input field in forms
+	 */
+	static function render() {
+		?>
+		<script>
+			(function (window, document) {
+				var input_name = "<?=self::getCurrentKeyValue()?>";
 
-                if (typeof $ !== "undefined") {
-                    $(document).ajaxSuccess(function () {
-                        pogudinAntiSpam();
-                    });
-                }
-            })(window, document);
-        </script>
-        <?
-    }
+				function pogudinAntiSpam() {
+					var forms = document.querySelectorAll("form");
+					forms.forEach(function (form) {
+						var input = form.querySelector("input[name='"+input_name+"']");
+						if (input === null) {
+							var new_input = document.createElement('input');
+							new_input.name = input_name;
+							new_input.type = "hidden";
+							new_input.value = "<?=self::getRandString()?>";
+							form.appendChild(new_input);
+						}
+					})
+				}
 
-    /**
-     * Reject forms without Javascript User Support
-     */
-    static function formOnBeforeResultAdd($WEB_FORM_ID, &$arFields, &$arrVALUES)
-    {
-        global $APPLICATION;
+				document.addEventListener("DOMContentLoaded", function () {
+						pogudinAntiSpam();
+				});
 
-	    if (
-		    !array_key_exists(self::SESSION_KEY_NAME, $_SESSION) ||
-		    !array_key_exists(self::FORM_INPUT_NAME, $_POST) ||
-		    $_SESSION[self::SESSION_KEY_NAME] !== $_POST[self::FORM_INPUT_NAME]
-	    ) {
-		    Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", "__spam_form.log");
-		    $APPLICATION->ThrowException('You are spamer!');
-	    }
-    }
+				if (typeof BX !== "undefined") {
+						BX.addCustomEvent(window, 'onAjaxSuccess', function () {
+								pogudinAntiSpam();
+						});
+				}
+
+				if (typeof $ !== "undefined") {
+						$(document).ajaxSuccess(function () {
+								pogudinAntiSpam();
+						});
+				}
+			})(window, document);
+		</script>
+		<?
+	}
+
+	/**
+	 * Reject forms without Javascript User Support
+	 */
+	static function formOnBeforeResultAdd($WEB_FORM_ID, &$arFields, &$arrVALUES)
+	{
+		global $APPLICATION;
+
+		if (
+			!array_key_exists(self::SESSION_KEY_NAME, $_SESSION) ||
+			!array_key_exists(self::getCurrentKeyValue(), $_POST)
+		) {
+			Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", "__spam_form.log");
+			$APPLICATION->ThrowException('You are spamer!');
+		}
+	}
 }

@@ -1,14 +1,16 @@
-<?
+<?php
+
+use Bitrix\Main as Main;
+
 IncludeModuleLangFile(__FILE__);
 
 if(class_exists("pogudin_email")) return;
 
 class pogudin_email extends CModule
 {
-	const MODULE_ID = "pogudin.email";
-    const MODULE_CODE_LANG = "POGUDIN_EMAIL_";
-	const MODULE_STRUCTURE = "\\Pogudin\\Email";
-
+	var $MODULE_ID = "pogudin.email";
+	var $MODULE_CODE_LANG = "POGUDIN_EMAIL_";
+	var $MODULE_STRUCTURE = "\\Pogudin\\Email";
 	var $MODULE_PATH;
 	var $MODULE_VERSION;
 	var $MODULE_VERSION_DATE;
@@ -43,7 +45,7 @@ class pogudin_email extends CModule
 	}
 
     function GetMessage($name) {
-        return GetMessage(self::MODULE_CODE_LANG . $name);
+        return GetMessage($this->MODULE_CODE_LANG . $name);
     }
 
 	function InstallDB($arParams = array())
@@ -58,13 +60,13 @@ class pogudin_email extends CModule
 		}
 		else
 		{
-			RegisterModule(self::MODULE_ID);
+			RegisterModule($this->MODULE_ID);
 
-			$eventManager = \Bitrix\Main\EventManager::getInstance();
+			$eventManager = Main\EventManager::getInstance();
 
 			// Spam
-			//$eventManager->registerEventHandler("form", "onBeforeResultAdd", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
-			//$eventManager->registerEventHandler("main", "OnEpilog", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "OnEpilog");
+			$eventManager->registerEventHandler("form", "onBeforeResultAdd", $this->MODULE_ID, $this->MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
+			$eventManager->registerEventHandler("main", "OnEpilog", $this->MODULE_ID, $this->MODULE_STRUCTURE . "\\Spam", "OnEpilog");
 
 			return true;
 		}
@@ -75,11 +77,11 @@ class pogudin_email extends CModule
 		global $DB, $DBType, $APPLICATION;
 		$this->errors = false;
 
-		$eventManager = \Bitrix\Main\EventManager::getInstance();
-		//$eventManager->unRegisterEventHandler("form", "onBeforeResultAdd", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
-		//$eventManager->unRegisterEventHandler("main", "OnEpilog", self::MODULE_ID, self::MODULE_STRUCTURE . "\\Spam", "OnEpilog");
+		$eventManager = Main\EventManager::getInstance();
+		$eventManager->unRegisterEventHandler("form", "onBeforeResultAdd", $this->MODULE_ID, $this->MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
+		$eventManager->unRegisterEventHandler("main", "OnEpilog", $this->MODULE_ID, $this->MODULE_STRUCTURE . "\\Spam", "OnEpilog");
 
-		UnRegisterModule(self::MODULE_ID);
+		UnRegisterModule($this->MODULE_ID);
 
 		if($this->errors !== false)
 		{
@@ -107,7 +109,7 @@ class pogudin_email extends CModule
 	function DoInstall()
 	{
 		global $DB, $DOCUMENT_ROOT, $APPLICATION, $step;
-		$POST_RIGHT = $APPLICATION->GetGroupRight(self::MODULE_ID);
+		$POST_RIGHT = $APPLICATION->GetGroupRight($this->MODULE_ID);
 		if($POST_RIGHT == "W")
 		{
 			$step = IntVal($step);
@@ -130,7 +132,7 @@ class pogudin_email extends CModule
 	function DoUninstall()
 	{
 		global $DB, $DOCUMENT_ROOT, $APPLICATION, $step;
-		$POST_RIGHT = $APPLICATION->GetGroupRight(self::MODULE_ID);
+		$POST_RIGHT = $APPLICATION->GetGroupRight($this->MODULE_ID);
 		if($POST_RIGHT == "W")
 		{
 			$step = IntVal($step);

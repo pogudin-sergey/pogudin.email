@@ -24,10 +24,25 @@ Class Spam
 		return $_SESSION[self::SESSION_KEY_NAME];
 	}
 
+	static function isEnable()
+	{
+		static $allow = null;
+
+		if (is_null($allow)) {
+			$allow = Main\Config\Option::get('pogudin.email', 'allow', 'N');
+		}
+
+		return ($allow === 'Y');
+	}
+
 	static function OnEpilog()
 	{
-		if (!defined('ADMIN_SECTION') || ADMIN_SECTION !== true)
+		if (
+				self::isEnable()
+				&& !(defined('ADMIN_SECTION') && ADMIN_SECTION === true)
+		) {
 			static::render();
+		}
 	}
 
 	/**
@@ -84,6 +99,7 @@ Class Spam
 			!array_key_exists(self::SESSION_KEY_NAME, $_SESSION) ||
 			!array_key_exists(self::getCurrentKeyValue(), $_POST)
 		) {
+			// todo on/off debug
 			Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", "__spam_form.log");
 			$APPLICATION->ThrowException('You are spamer!');
 		}

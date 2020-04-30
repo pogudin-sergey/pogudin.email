@@ -7,10 +7,12 @@ namespace Pogudin\Email;
 
 use Bitrix\Main\Context;
 use Bitrix\Main as Main;
+use Bitrix\Main\Config\Option as Option;
 
 Class Spam
 {
 	const SESSION_KEY_NAME = 'pogudin_expansion_spam_key_value';
+	const MODULE_ID = 'pogudin.email';
 
 	static function getRandString() {
 		return randString(rand(6,32));
@@ -29,7 +31,7 @@ Class Spam
 		static $allow = null;
 
 		if (is_null($allow)) {
-			$allow = Main\Config\Option::get('pogudin.email', 'allow', 'N');
+			$allow = Option::get(self::MODULE_ID, 'allow', 'N');
 		}
 
 		return ($allow === 'Y');
@@ -99,8 +101,11 @@ Class Spam
 			!array_key_exists(self::SESSION_KEY_NAME, $_SESSION) ||
 			!array_key_exists(self::getCurrentKeyValue(), $_POST)
 		) {
-			// todo on/off debug
-			Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", "__spam_form.log");
+
+			if(Option::get(self::MODULE_ID, 'log', 'N') === 'Y') {
+				Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", "__spam_form.log");
+			}
+
 			$APPLICATION->ThrowException('You are spamer!');
 		}
 	}

@@ -19,8 +19,9 @@ $MOD_RIGHT = $APPLICATION->GetGroupRight($module_id);
 if($MOD_RIGHT>='R') {
 
 	// set up form
-	$arAllOptions = Array(
-		Array('allow', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_ALLOW'), 'Y', Array('checkbox')),
+	$arAllOptions = array(
+		array('allow', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_ALLOW'), 'Y', array('checkbox')),
+		array('log', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG'), 'N', array('checkbox')),
 	);
 
 	if ($MOD_RIGHT >= 'Y' || $USER->IsAdmin()) {

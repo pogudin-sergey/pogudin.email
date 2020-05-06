@@ -22,6 +22,7 @@ if($MOD_RIGHT>='R') {
 	$arAllOptions = array(
 		array('allow', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_ALLOW'), 'Y', array('checkbox')),
 		array('log', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG'), 'N', array('checkbox')),
+		array('log_filename', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG_FILENAME'), '__spam.log', array('text')),
 	);
 
 	if ($MOD_RIGHT >= 'Y' || $USER->IsAdmin()) {

@@ -103,7 +103,8 @@ Class Spam
 		) {
 
 			if(Option::get(self::MODULE_ID, 'log', 'N') === 'Y') {
-				Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", "__spam_form.log");
+				$filename = Option::get(self::MODULE_ID, 'log_filename', '__spam_form.log');
+				Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", $filename);
 			}
 
 			$APPLICATION->ThrowException('You are spamer!');

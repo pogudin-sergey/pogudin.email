@@ -21,6 +21,15 @@ if($MOD_RIGHT>='R') {
 	// set up form
 	$arAllOptions = array(
 		array('allow', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_ALLOW'), 'Y', array('checkbox')),
+		array(
+			'type',
+			Loc::getMessage("POGUDIN_EMAIL_OPTIONS_TYPE"),
+			'AJAX',
+			array("selectbox", array(
+				'AJAX' => Loc::getMessage('POGUDIN_EMAIL_OPTIONS_TYPE_AJAX'),
+				'RECAPCHA' => Loc::getMessage('POGUDIN_EMAIL_OPTIONS_TYPE_RECAPTCHA3'),
+			))
+		),
 		array('log', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG'), 'N', array('checkbox')),
 		array('log_filename', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG_FILENAME'), '__spam.log', array('text')),
 	);

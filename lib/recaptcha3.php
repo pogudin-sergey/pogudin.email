@@ -5,16 +5,42 @@ namespace Pogudin\Email;
  * Antispam core by Recaptcha3
  */
 
+use Bitrix\Main\Config\Option as Option;
+
 Class Recaptcha3
 {
 	const VERIFY_FIELD_ID = 'INPUT_SECURITY_RE3';
 
 	private static $score = 0;
+	private static $settings = [];
+
+	static function initOptions()
+	{
+		// todo to setting
+		$recaptcha_success_score = floatval(Option::get(self::MODULE_ID, 'recaptcha_success_score', '50'));	// percent
+		$recaptcha_success_score = $recaptcha_success_score / 100;
+
+		self::$settings = [
+			'SUCCESS_SCORE' => $recaptcha_success_score,
+			'PRIVATE_KEY' => Option::get(self::MODULE_ID, 'recaptcha_private_key', ''),
+			'PUBLIC_KEY' => Option::get(self::MODULE_ID, 'recaptcha_public_key', ''),
+			'CSS_SELECTOR' => ['#contact-form .col-md-12:last-child'],
+			'ACTION' => 'index',
+		];
+	}
+
 	/**
 	 * Add additional code
 	 */
 	static function render()
 	{
+		self::initOptions();
+
+		$aCssQuery = ['#contact-form .col-md-12:last-child']; // todo
+		$action = 'index';
+
+		$asset = \Bitrix\Main\Page\Asset::getInstance();
+		$asset->addJs('https://www.google.com/recaptcha/api.js?render='.self::PUBLIC_KEY);
 		?>
 		<style>
 			.grecaptcha-badge {

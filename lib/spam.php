@@ -3,7 +3,6 @@ namespace Pogudin\Email;
 
 /*
  * Antispam system
- * TODO: поддержка bitrix:main.feedback
  */
 
 use Bitrix\Main as Main;
@@ -69,5 +68,13 @@ Class Spam
 			// TODO custom message
 			$APPLICATION->ThrowException('You are spamer!');
 		}
+	}
+
+	/**
+	 * Return message for spammers
+	 */
+	static function getSpamMessage()
+	{
+		return 'You are spamer!';
 	}
 }

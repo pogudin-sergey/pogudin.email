@@ -55,6 +55,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["submit"] <> '' && (!isset($_P
 				$arResult["ERROR_MESSAGE"][] = GetMessage("MF_CAPTHCA_EMPTY");
 
 		}			
+
+		/*
+		 * Module pogudin.email additional protected logic
+		 * @author Pogudin Sergey (https://pogudin.pro)
+		 */
+		if (\Bitrix\Main\Loader::includeModule('pogudin.email')) {
+			if (!Pogudin\Email\Spam::getProtectorClass()::verify()) {
+				$arResult["ERROR_MESSAGE"][] = Pogudin\Email\Spam::getSpamMessage();
+			}
+		}
+
 		if(empty($arResult["ERROR_MESSAGE"]))
 		{
 			$arFields = Array(

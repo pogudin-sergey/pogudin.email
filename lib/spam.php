@@ -65,8 +65,7 @@ Class Spam
 				Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", $filename);
 			}
 
-			// TODO custom message
-			$APPLICATION->ThrowException('You are spamer!');
+			$APPLICATION->ThrowException(self::getSpamMessage());
 		}
 	}
 

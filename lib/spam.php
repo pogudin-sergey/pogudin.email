@@ -8,6 +8,12 @@ namespace Pogudin\Email;
 use Bitrix\Main as Main;
 use Bitrix\Main\Config\Option as Option;
 
+interface SpamEngine
+{
+	static function render();
+	static function verify();
+}
+
 Class Spam
 {
 	const MODULE_ID = 'pogudin.email';

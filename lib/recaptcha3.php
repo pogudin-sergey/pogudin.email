@@ -7,7 +7,7 @@ namespace Pogudin\Email;
 
 use Bitrix\Main\Config\Option as Option;
 
-Class Recaptcha3
+Class Recaptcha3 implements SpamEngine
 {
 	const VERIFY_FIELD_ID = 'INPUT_SECURITY_RE3';
 

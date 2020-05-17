@@ -5,7 +5,7 @@ namespace Pogudin\Email;
  * Antispam core by Ajax
  */
 
-Class Ajax
+Class Ajax implements SpamEngine
 {
 	const SESSION_KEY_NAME = 'pogudin_expansion_spam_key_value';
 

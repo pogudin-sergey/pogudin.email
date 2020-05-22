@@ -10,6 +10,7 @@ use Bitrix\Main\Config\Option as Option;
 
 interface SpamEngine
 {
+	const MODULE_ID = 'pogudin.email';
 	static function render();
 	static function verify();
 }

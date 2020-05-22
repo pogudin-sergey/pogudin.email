@@ -30,6 +30,7 @@ if($MOD_RIGHT>='R') {
 				'RECAPCHA' => Loc::getMessage('POGUDIN_EMAIL_OPTIONS_TYPE_RECAPTCHA3'),
 			))
 		),
+		array('recaptcha3_show_rights', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SHOW_RIGHTS'), 'Y', array('checkbox')),
 		array('log', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG'), 'N', array('checkbox')),
 		array('log_filename', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG_FILENAME'), '__spam.log', array('text')),
 	);

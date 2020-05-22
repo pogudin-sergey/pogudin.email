@@ -5,3 +5,4 @@ $MESS["POGUDIN_EMAIL_OPTIONS_LOG_FILENAME"] = "Путь к лог-файлу о�
 $MESS["POGUDIN_EMAIL_OPTIONS_TYPE"] = "Тип проверки";
 $MESS["POGUDIN_EMAIL_OPTIONS_TYPE_AJAX"] = "AJAX ключ";
 $MESS["POGUDIN_EMAIL_OPTIONS_TYPE_RECAPTCHA3"] = "reCaptcha 3";
+$MESS["POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SHOW_RIGHTS"] = "Показывать лицензионое соглашение reCaptcha";

@@ -56,11 +56,16 @@ Class Recaptcha3 implements SpamEngine
 					newInput.className = '<?=self::VERIFY_FIELD_ID?>';
 					newInput.name = '<?=self::VERIFY_FIELD_ID?>';
 					refElem.parentNode.insertBefore(newInput, refElem.nextSibling);
-
-					// todo setting option add text
-					var newP = document.createElement('p');
-					newP.innerHTML = "This site is protected by reCAPTCHA and the Google <a href=\"https://policies.google.com/privacy\">Privacy Policy</a> and <a href=\"https://policies.google.com/terms\">Terms of Service</a> apply.";
-					refElem.parentNode.insertBefore(newP, newInput.nextSibling);
+					<?
+					$recaptcha3_show_rights = Option::get(self::MODULE_ID, 'recaptcha3_show_rights', 'Y') === 'Y' ? true : false;
+					if ($recaptcha3_show_rights) {
+						?>
+						var newP = document.createElement('p');
+						newP.innerHTML = "This site is protected by reCAPTCHA and the Google <a href=\"https://policies.google.com/privacy\">Privacy Policy</a> and <a href=\"https://policies.google.com/terms\">Terms of Service</a> apply.";
+						refElem.parentNode.insertBefore(newP, newInput.nextSibling);
+						<?
+					}
+					?>
 				}
 			}
 

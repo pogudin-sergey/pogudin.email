@@ -30,9 +30,12 @@ if($MOD_RIGHT>='R') {
 				'RECAPCHA' => Loc::getMessage('POGUDIN_EMAIL_OPTIONS_TYPE_RECAPTCHA3'),
 			))
 		),
-		array('recaptcha3_show_rights', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SHOW_RIGHTS'), 'Y', array('checkbox')),
 		array('log', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG'), 'N', array('checkbox')),
 		array('log_filename', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG_FILENAME'), '__spam.log', array('text')),
+	);
+	
+	$arRecaptchaOptions = array(
+		array('recaptcha3_show_rights', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SHOW_RIGHTS'), 'Y', array('checkbox')),
 	);
 
 	if ($MOD_RIGHT >= 'Y' || $USER->IsAdmin()) {
@@ -67,6 +70,11 @@ if($MOD_RIGHT>='R') {
 
 	$aTabs = array();
 	$aTabs[] = array('DIV' => 'set', 'TAB' => Loc::getMessage('MAIN_TAB_SET'), 'ICON' => 'wiki_settings', 'TITLE' => Loc::getMessage('MAIN_TAB_TITLE_SET'));
+
+	if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA') {
+		$aTabs[] = array('DIV' => 'recaptcha3', 'TAB' => Loc::getMessage('RECAPTCHA3_TAB_SET'), 'ICON' => 'wiki_settings', 'TITLE' => Loc::getMessage('RECAPTCHA3_TAB_SET'));
+	}
+
 	$aTabs[] = array('DIV' => 'rights', 'TAB' => Loc::getMessage('MAIN_TAB_RIGHTS'), 'ICON' => 'wiki_settings', 'TITLE' => Loc::getMessage('MAIN_TAB_TITLE_RIGHTS'));
 
 	$tabControl = new CAdminTabControl('tabControl', $aTabs);
@@ -78,6 +86,11 @@ if($MOD_RIGHT>='R') {
 		<?
 		$tabControl->BeginNextTab();
 		__AdmSettingsDrawList('pogudin.email', $arAllOptions);
+
+		if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA') {
+			$tabControl->BeginNextTab();
+			__AdmSettingsDrawList('pogudin.email', $arRecaptchaOptions);
+		}
 
 		$tabControl->BeginNextTab();
 		require_once($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/admin/group_rights.php');

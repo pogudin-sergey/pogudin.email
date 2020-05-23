@@ -16,8 +16,7 @@ Class Recaptcha3 implements SpamEngine
 
 	static function initOptions()
 	{
-		// todo to setting
-		$recaptcha_success_score = floatval(Option::get(self::MODULE_ID, 'recaptcha_success_score', '50'));	// percent
+		$recaptcha_success_score = floatval(Option::get(self::MODULE_ID, 'recaptcha_success_score', '60'));	// percent
 		$recaptcha_success_score = $recaptcha_success_score / 100;
 
 		self::$settings = [

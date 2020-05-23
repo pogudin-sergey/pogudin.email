@@ -35,6 +35,7 @@ if($MOD_RIGHT>='R') {
 	);
 	
 	$arRecaptchaOptions = array(
+		array('recaptcha_success_score', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SUCCESS_SCORE'), 60, array('text')),
 		array('recaptcha3_show_rights', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SHOW_RIGHTS'), 'Y', array('checkbox')),
 	);
 
@@ -56,9 +57,18 @@ if($MOD_RIGHT>='R') {
 				&& strlen($Update) > 0
 				&& check_bitrix_sessid()
 		) {
-			foreach ($arAllOptions as $option) {
+			foreach (array_merge($arAllOptions, $arRecaptchaOptions) as $option) {
 				$name = $option[0];
 				$val = ${$name};
+
+				// Allow only 1-100 value
+				if ($name === 'recaptcha_success_score') {
+					if ($val > 100) {
+						$val = 100;
+					} else if ($val < 1) {
+						$val = 1;
+					}
+				}
 
 				if ($option[3][0] == 'checkbox' && $val != 'Y')
 					$val = 'N';

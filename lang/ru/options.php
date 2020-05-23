@@ -7,3 +7,4 @@ $MESS["POGUDIN_EMAIL_OPTIONS_TYPE_AJAX"] = "AJAX ключ";
 $MESS["POGUDIN_EMAIL_OPTIONS_TYPE_RECAPTCHA3"] = "reCaptcha 3";
 $MESS["POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SHOW_RIGHTS"] = "Показывать лицензионое соглашение reCaptcha";
 $MESS["RECAPTCHA3_TAB_SET"] = "reCaptcha";
+$MESS["POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SUCCESS_SCORE"] = "Предел срабатывания reCaptcha:<br><i>Google возвращает показатель вероятности человек-бот (от 10% до 90%).<br>Где 90% — вероятно человек, 10% — бот. Значения 30% и ниже воспринимаются как очень подозрительная активность.<br>Вы можете изменить предел срабатывания защиты в данном поле. Весь трафик получивший более низкую оценку будет отфильтрован.</i>";

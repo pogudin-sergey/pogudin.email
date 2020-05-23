@@ -40,7 +40,7 @@ Class Recaptcha3 implements SpamEngine
 		$action = 'index';
 
 		$asset = \Bitrix\Main\Page\Asset::getInstance();
-		$asset->addJs('https://www.google.com/recaptcha/api.js?render='.self::PUBLIC_KEY);
+		$asset->addJs('https://www.google.com/recaptcha/api.js?render=' . self::$settings['PUBLIC_KEY']);
 		?>
 		<style>
 			.grecaptcha-badge {
@@ -53,8 +53,8 @@ Class Recaptcha3 implements SpamEngine
 				if (refElem) {
 					var newInput = document.createElement('input');
 					newInput.type = 'hidden';
-					newInput.className = '<?=self::VERIFY_FIELD_ID?>';
-					newInput.name = '<?=self::VERIFY_FIELD_ID?>';
+					newInput.className = '<?=self::$settings['VERIFY_FIELD_ID']?>';
+					newInput.name = '<?=self::$settings['VERIFY_FIELD_ID']?>';
 					refElem.parentNode.insertBefore(newInput, refElem.nextSibling);
 					<?
 					$recaptcha3_show_rights = Option::get(self::MODULE_ID, 'recaptcha3_show_rights', 'Y') === 'Y' ? true : false;
@@ -76,9 +76,9 @@ Class Recaptcha3 implements SpamEngine
 				});
 
 				grecaptcha.ready(function () {
-					grecaptcha.execute('<?=self::PUBLIC_KEY?>', {action: '<?=$action?>'})
+					grecaptcha.execute('<?=self::$settings['PUBLIC_KEY']?>', {action: '<?=$action?>'})
 						.then(function (token) {
-								var elements = document.querySelectorAll(".<?=self::VERIFY_FIELD_ID?>");
+								var elements = document.querySelectorAll(".<?=self::$settings['VERIFY_FIELD_ID']?>");
 								for (let key in elements) {
 									elements[key].value = token;
 								}

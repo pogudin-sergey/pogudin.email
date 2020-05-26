@@ -9,9 +9,6 @@ use Bitrix\Main\Config\Option as Option;
 
 Class Recaptcha3 implements SpamEngine
 {
-	const VERIFY_FIELD_ID = 'INPUT_SECURITY_RE3';
-
-	private static $score = 0;
 	private static $settings = [];
 
 	static function initOptions()
@@ -60,8 +57,8 @@ Class Recaptcha3 implements SpamEngine
 						?>
 						var newP = document.createElement('p');
 						newP.innerHTML = "This site is protected by reCAPTCHA and the Google <a href=\"https://policies.google.com/privacy\">Privacy Policy</a> and <a href=\"https://policies.google.com/terms\">Terms of Service</a> apply.";
-            //form.parentNode.insertBefore(newP, newInput.nextSibling);
-            form.appendChild(newP);
+						//form.parentNode.insertBefore(newP, newInput.nextSibling);
+						form.appendChild(newP);
 						<?
 					}
 					?>
@@ -80,4 +77,30 @@ Class Recaptcha3 implements SpamEngine
 		</script>
 		<?
 	}
+	private static function getResult() {
+		$url = 'https://www.google.com/recaptcha/api/siteverify';
+		$params = [
+				'secret' => self::$settings['PRIVATE_KEY'],
+				'response' => $_POST[self::$settings['VERIFY_FIELD_ID']],
+				'remoteip' => $_SERVER['REMOTE_ADDR']
+		];
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		$response = curl_exec($ch);
+		if (!empty($response)) {
+			$decoded_response = json_decode($response);
+			if (json_last_error() === JSON_ERROR_NONE) {
+				return $decoded_response;
+			}
+		}
+
+		return false;
+	}
+
 }

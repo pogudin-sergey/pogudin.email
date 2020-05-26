@@ -67,12 +67,15 @@ Class Spam
 		global $APPLICATION;
 
 		if (!self::getProtectorClass()::verify()) {
-			if(Option::get(self::MODULE_ID, 'log', 'N') === 'Y') {
-				$filename = Option::get(self::MODULE_ID, 'log_filename', '__spam_form.log');
-				Main\Diag\Debug::writeToFile($_POST, "Blocked spamer [$WEB_FORM_ID]", $filename);
-			}
-
+			self::log($_POST, "Blocked spamer [$WEB_FORM_ID]");
 			$APPLICATION->ThrowException(self::getSpamMessage());
+		}
+	}
+
+	static function log($message, $title = '') {
+		if(Option::get(self::MODULE_ID, 'log', 'N') === 'Y') {
+			$filename = Option::get(self::MODULE_ID, 'log_filename', '__spam_form.log');
+			Main\Diag\Debug::writeToFile($message, $title, $filename);
 		}
 	}
 

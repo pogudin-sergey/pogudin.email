@@ -23,8 +23,8 @@ Class Recaptcha3 implements SpamEngine
 			'SUCCESS_SCORE' => $recaptcha_success_score,
 			'PRIVATE_KEY' => Option::get(self::MODULE_ID, 'recaptcha_private_key', ''),
 			'PUBLIC_KEY' => Option::get(self::MODULE_ID, 'recaptcha_public_key', ''),
-			'CSS_SELECTOR' => ['#contact-form .col-md-12:last-child'],
 			'ACTION' => 'index',
+			'VERIFY_FIELD_ID' => 'INPUT_SECURITY_RE3',
 		];
 	}
 
@@ -35,9 +35,6 @@ Class Recaptcha3 implements SpamEngine
 	{
 		self::initOptions();
 
-		$aCssQuery = ['#contact-form .col-md-12:last-child']; // todo
-		$action = 'index';
-
 		$asset = \Bitrix\Main\Page\Asset::getInstance();
 		$asset->addJs('https://www.google.com/recaptcha/api.js?render=' . self::$settings['PUBLIC_KEY']);
 		?>
@@ -47,40 +44,36 @@ Class Recaptcha3 implements SpamEngine
 			}
 		</style>
 		<script>
-			function addCaptchaHTML(container) {
-				var refElem = document.querySelector(container);
-				if (refElem) {
+			BX.ready(function () {
+				var forms = document.querySelectorAll("form");
+				forms.forEach(function (form) {
 					var newInput = document.createElement('input');
 					newInput.type = 'hidden';
 					newInput.className = '<?=self::$settings['VERIFY_FIELD_ID']?>';
 					newInput.name = '<?=self::$settings['VERIFY_FIELD_ID']?>';
-					refElem.parentNode.insertBefore(newInput, refElem.nextSibling);
+					//form.parentNode.insertBefore(newInput, refElem.nextSibling);
+					form.appendChild(newInput);
+
 					<?
 					$recaptcha3_show_rights = Option::get(self::MODULE_ID, 'recaptcha3_show_rights', 'Y') === 'Y' ? true : false;
 					if ($recaptcha3_show_rights) {
 						?>
 						var newP = document.createElement('p');
 						newP.innerHTML = "This site is protected by reCAPTCHA and the Google <a href=\"https://policies.google.com/privacy\">Privacy Policy</a> and <a href=\"https://policies.google.com/terms\">Terms of Service</a> apply.";
-						refElem.parentNode.insertBefore(newP, newInput.nextSibling);
+            //form.parentNode.insertBefore(newP, newInput.nextSibling);
+            form.appendChild(newP);
 						<?
 					}
 					?>
-				}
-			}
-
-			BX.ready(function () {
-				var addTo = <?=\CUtil::PhpToJSObject($aCssQuery)?>;
-				addTo.forEach(function (selector) {
-					addCaptchaHTML(selector);
 				});
 
 				grecaptcha.ready(function () {
-					grecaptcha.execute('<?=self::$settings['PUBLIC_KEY']?>', {action: '<?=$action?>'})
+					grecaptcha.execute('<?=self::$settings['PUBLIC_KEY']?>', {action: '<?=self::$settings['ACTION']?>'})
 						.then(function (token) {
 								var elements = document.querySelectorAll(".<?=self::$settings['VERIFY_FIELD_ID']?>");
-								for (let key in elements) {
-									elements[key].value = token;
-								}
+                elements.forEach(function (element) {
+                    element.value = token;
+                });
 						});
 				});
 			});

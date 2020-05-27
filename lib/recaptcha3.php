@@ -77,6 +77,41 @@ Class Recaptcha3 implements SpamEngine
 		</script>
 		<?
 	}
+
+	static function verify() {
+		self::initOptions();
+
+		if (isset($_POST[self::$settings['VERIFY_FIELD_ID']]) && strlen($_POST[self::$settings['VERIFY_FIELD_ID']]) > 0) {
+			$decoded_response = self::getResult();
+
+			if ($decoded_response && $decoded_response->success
+					&& $decoded_response->action == self::$settings['ACTION']
+					&& $decoded_response->score > 0)
+			{
+				$result = (floatval($decoded_response->score) >= self::$settings['SUCCESS_SCORE']);
+
+				// Debug
+				Spam::log("reCaptcha score." .
+					"\nRESPONSE: " . print_r($decoded_response, true) .
+					"\nRESULT: " . print_r($result, true)
+				);
+
+				return $result;
+
+			} else if (
+				is_array($decoded_response)
+				&& is_array($decoded_response['error-codes'])
+				&& in_array('timeout-or-duplicate', $decoded_response['error-codes'])
+			) {
+				return true;
+			} else {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private static function getResult() {
 		$url = 'https://www.google.com/recaptcha/api/siteverify';
 		$params = [

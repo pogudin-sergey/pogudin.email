@@ -113,21 +113,51 @@ Class Recaptcha3 implements SpamEngine
 	}
 
 	private static function getResult() {
-		$url = 'https://www.google.com/recaptcha/api/siteverify';
-		$params = [
-				'secret' => self::$settings['PRIVATE_KEY'],
-				'response' => $_POST[self::$settings['VERIFY_FIELD_ID']],
-				'remoteip' => $_SERVER['REMOTE_ADDR']
+		$post_data = [
+			'secret' => self::$settings['PRIVATE_KEY'],
+			'response' => $_POST[self::$settings['VERIFY_FIELD_ID']],
+			'remoteip' => $_SERVER['REMOTE_ADDR']
 		];
+		$url = 'https://www.google.com/recaptcha/api/siteverify';
 
+		if (function_exists('curl_init')) {
+			return self::sendReauestCurl($url, $post_data);
+		} else {
+			return self::sendReauestAlternate($url, $post_data);
+		}
+	}
+
+	private static function sendReauestCurl($url, $post_data) {
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
 		$response = curl_exec($ch);
+		if (!empty($response)) {
+			$decoded_response = json_decode($response);
+			if (json_last_error() === JSON_ERROR_NONE) {
+				return $decoded_response;
+			}
+		}
+
+		return false;
+	}
+
+	private static function sendReauestAlternate($url, $post_data) {
+		$post_data = http_build_query($post_data);
+		$opts = array('http' =>
+			array(
+				'method'  => 'POST',
+				'header'  => 'Content-type: application/x-www-form-urlencoded',
+				'content' => $post_data
+			)
+		);
+		$context  = stream_context_create($opts);
+		$response = file_get_contents($url, false, $context);
+
 		if (!empty($response)) {
 			$decoded_response = json_decode($response);
 			if (json_last_error() === JSON_ERROR_NONE) {

@@ -49,13 +49,17 @@ Class Spam
 		return $currentObject;
 	}
 
-	static function OnEpilog()
+	static function OnEndBufferContent(&$content)
 	{
 		if (
 				self::isEnable()
 				&& !(defined('ADMIN_SECTION') && ADMIN_SECTION === true)
 		) {
+			ob_start();
 			self::getProtectorClass()::render();
+			$result = ob_get_clean();
+
+			$content = str_replace("</body>", "$result\n</body>", $content);
 		}
 	}
 

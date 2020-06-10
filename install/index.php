@@ -66,7 +66,7 @@ class pogudin_email extends CModule
 
 			// Spam
 			$eventManager->registerEventHandler("form", "onBeforeResultAdd", $this->MODULE_ID, $this->MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
-			$eventManager->registerEventHandler("main", "OnEpilog", $this->MODULE_ID, $this->MODULE_STRUCTURE . "\\Spam", "OnEpilog");
+			$eventManager->registerEventHandler("main", "OnEndBufferContent", $this->MODULE_ID, $this->MODULE_STRUCTURE . "\\Spam", "OnEndBufferContent");
 
 			return true;
 		}
@@ -79,7 +79,7 @@ class pogudin_email extends CModule
 
 		$eventManager = Main\EventManager::getInstance();
 		$eventManager->unRegisterEventHandler("form", "onBeforeResultAdd", $this->MODULE_ID, $this->MODULE_STRUCTURE . "\\Spam", "formOnBeforeResultAdd");
-		$eventManager->unRegisterEventHandler("main", "OnEpilog", $this->MODULE_ID, $this->MODULE_STRUCTURE . "\\Spam", "OnEpilog");
+		$eventManager->unRegisterEventHandler("main", "OnEndBufferContent", $this->MODULE_ID, $this->MODULE_STRUCTURE . "\\Spam", "OnEndBufferContent");
 
 		UnRegisterModule($this->MODULE_ID);
 

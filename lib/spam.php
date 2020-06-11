@@ -54,6 +54,7 @@ Class Spam
 		if (
 				self::isEnable()
 				&& !(defined('ADMIN_SECTION') && ADMIN_SECTION === true)
+				&& php_sapi_name() != 'cli'
 		) {
 			ob_start();
 			self::getProtectorClass()::render();

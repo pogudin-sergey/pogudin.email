@@ -26,8 +26,7 @@ Class Ajax implements SpamEngine
 							var new_input = document.createElement('input');
 							new_input.name = input_name;
 							new_input.type = "hidden";
-							// TODO проверить работу на композитном режиме
-							new_input.value = "<?=self::getRandString()?>";
+							new_input.value = "937013292094";
 							form.appendChild(new_input);
 						}
 					})

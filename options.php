@@ -60,7 +60,13 @@ if($MOD_RIGHT>='R') {
 				&& strlen($Update) > 0
 				&& check_bitrix_sessid()
 		) {
-			foreach (array_merge($arAllOptions, $arRecaptchaOptions) as $option) {
+			if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA') {
+				$arOptionsForSet = array_merge($arAllOptions, $arRecaptchaOptions);
+			} else {
+				$arOptionsForSet = $arAllOptions;
+			}
+
+			foreach ($arOptionsForSet as $option) {
 				$name = $option[0];
 				$val = ${$name};
 

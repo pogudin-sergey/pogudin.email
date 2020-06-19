@@ -49,7 +49,7 @@ Class Ajax implements SpamEngine
 				}
 			})(window, document);
 		</script>
-		<?
+		<?php
 	}
 
 	/**

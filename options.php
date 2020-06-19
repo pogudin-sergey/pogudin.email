@@ -34,7 +34,6 @@ if($MOD_RIGHT>='R') {
 		array('log_filename', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG_FILENAME'), '__spam.log', array('text')),
 	);
 
-	// TODO пропадают значения при выборе типа AJAX
 	$arRecaptchaOptions = array(
 		array('recaptcha_private_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_PRIVATE_KEY'), '', array('text')),
 		array('recaptcha_public_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_PUBLIC_KEY'), '', array('text')),

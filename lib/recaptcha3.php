@@ -31,10 +31,8 @@ Class Recaptcha3 implements SpamEngine
 	static function render()
 	{
 		self::initOptions();
-
-		$asset = \Bitrix\Main\Page\Asset::getInstance();
-		$asset->addJs('https://www.google.com/recaptcha/api.js?render=' . self::$settings['PUBLIC_KEY']);
 		?>
+		<script src="https://www.google.com/recaptcha/api.js?render=<?=self::$settings['PUBLIC_KEY']?>" data-skip-moving="true"></script>
 		<style>
 			.grecaptcha-badge {
 				display: none;
@@ -75,7 +73,7 @@ Class Recaptcha3 implements SpamEngine
 				});
 			});
 		</script>
-		<?
+		<?php
 	}
 
 	static function verify() {
@@ -108,6 +106,9 @@ Class Recaptcha3 implements SpamEngine
 				return true;
 			}
 		}
+
+		// Debug
+		Spam::log("reCaptcha verify false");
 
 		return false;
 	}

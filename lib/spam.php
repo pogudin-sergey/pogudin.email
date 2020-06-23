@@ -89,6 +89,11 @@ Class Spam
 	 */
 	static function getSpamMessage()
 	{
-		return 'You are spamer!';
+		$message = Option::get(self::MODULE_ID, 'spam_message', null);
+
+		if (is_null($message))
+			return 'You are spamer!';
+		else
+			return $message;
 	}
 }

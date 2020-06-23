@@ -32,6 +32,7 @@ if($MOD_RIGHT>='R') {
 		),
 		array('log', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG'), 'N', array('checkbox')),
 		array('log_filename', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG_FILENAME'), '__spam.log', array('text')),
+		array('spam_message', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_SPAM_MESSAGE'), 'Spam!', array('text')),
 	);
 
 	$arRecaptchaOptions = array(

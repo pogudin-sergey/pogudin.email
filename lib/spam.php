@@ -80,6 +80,7 @@ Class Spam
 	static function log($message, $title = '') {
 		if(Option::get(self::MODULE_ID, 'log', 'N') === 'Y') {
 			$filename = Option::get(self::MODULE_ID, 'log_filename', '__spam_form.log');
+			$message = '[' . date('Y-m-d H:i:s') . "] $message";
 			Main\Diag\Debug::writeToFile($message, $title, $filename);
 		}
 	}

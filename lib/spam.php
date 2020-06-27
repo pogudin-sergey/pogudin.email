@@ -36,7 +36,7 @@ Class Spam
 
 		if (empty($currentObject)) {
 			switch (Option::get(self::MODULE_ID, 'type', 'AJAX')) {
-				case 'RECAPCHA':
+				case 'RECAPCHA3':
 					$currentObject = Recaptcha3::class;
 					break;
 

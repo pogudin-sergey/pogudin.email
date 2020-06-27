@@ -27,7 +27,8 @@ if($MOD_RIGHT>='R') {
 			'AJAX',
 			array("selectbox", array(
 				'AJAX' => Loc::getMessage('POGUDIN_EMAIL_OPTIONS_TYPE_AJAX'),
-				'RECAPCHA' => Loc::getMessage('POGUDIN_EMAIL_OPTIONS_TYPE_RECAPTCHA3'),
+				'RECAPCHA3' => Loc::getMessage('POGUDIN_EMAIL_OPTIONS_TYPE_RECAPTCHA3'),
+				'RECAPCHA2' => Loc::getMessage('POGUDIN_EMAIL_OPTIONS_TYPE_RECAPTCHA2'),
 			))
 		),
 		array('log', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_LOG'), 'N', array('checkbox')),
@@ -60,7 +61,7 @@ if($MOD_RIGHT>='R') {
 				&& strlen($Update) > 0
 				&& check_bitrix_sessid()
 		) {
-			if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA') {
+			if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA3') {
 				$arOptionsForSet = array_merge($arAllOptions, $arRecaptchaOptions);
 			} else {
 				$arOptionsForSet = $arAllOptions;
@@ -90,7 +91,7 @@ if($MOD_RIGHT>='R') {
 	$aTabs = array();
 	$aTabs[] = array('DIV' => 'set', 'TAB' => Loc::getMessage('MAIN_TAB_SET'), 'ICON' => 'wiki_settings', 'TITLE' => Loc::getMessage('MAIN_TAB_TITLE_SET'));
 
-	if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA') {
+	if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA3') {
 		$aTabs[] = array('DIV' => 'recaptcha3', 'TAB' => Loc::getMessage('RECAPTCHA3_TAB_SET'), 'ICON' => 'wiki_settings', 'TITLE' => Loc::getMessage('RECAPTCHA3_TAB_SET'));
 	}
 
@@ -106,7 +107,7 @@ if($MOD_RIGHT>='R') {
 		$tabControl->BeginNextTab();
 		__AdmSettingsDrawList('pogudin.email', $arAllOptions);
 
-		if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA') {
+		if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA3') {
 			$tabControl->BeginNextTab();
 			__AdmSettingsDrawList('pogudin.email', $arRecaptchaOptions);
 		}

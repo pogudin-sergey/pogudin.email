@@ -40,6 +40,10 @@ Class Spam
 					$currentObject = Recaptcha3::class;
 					break;
 
+				case 'RECAPCHA2':
+					$currentObject = Recaptcha2::class;
+					break;
+
 				case 'AJAX':
 				default:
 					$currentObject = Ajax::class;

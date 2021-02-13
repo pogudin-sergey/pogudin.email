@@ -24,18 +24,24 @@ Class Recaptcha2 implements SpamEngine
 		self::initOptions();
 		?>
 		<script>
+			var verifyCallback = function(response) {
+				alert(response);
+			};
+
 			var re2onloadCallback = function() {
 				var forms = document.querySelectorAll("form");
+				var counter = 0;
 				forms.forEach(function (form) {
+					counter++;
 					var newDiv = document.createElement('div');
-					newDiv.id = 0;	// todo unique
+					newDiv.id = "recaptcha2_div" + counter;
 					newDiv.className = 'g-recaptcha';
-					newDiv['data-sitekey'] = '<?=self::$settings['PUBLIC_KEY']?>';
 					//form.parentNode.insertBefore(newDiv, refElem.nextSibling);
 					form.appendChild(newDiv);
 
-					widgetId1 = grecaptcha.render('exampleid1', {
-						'sitekey' : 'your_site_key',
+					widgetId1 = grecaptcha.render(newDiv.id, {
+						'sitekey' : '<?=self::$settings['PUBLIC_KEY']?>',
+						'callback' : verifyCallback,
 						'theme' : 'light'	// dark, to options
 					});
 				}

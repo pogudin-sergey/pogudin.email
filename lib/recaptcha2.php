@@ -44,7 +44,7 @@ Class Recaptcha2 implements SpamEngine
 						'callback' : verifyCallback,
 						'theme' : 'light'	// dark, to options
 					});
-				}
+				});
 			};
 		</script>
 		<script data-skip-moving="true" src="https://www.google.com/recaptcha/api.js?onload=re2onloadCallback&render=explicit" async defer></script>

@@ -38,12 +38,17 @@ if($MOD_RIGHT>='R') {
 
 	$arRecaptchaOptions = array(
 		array('recaptcha_private_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_PRIVATE_KEY'), '', array('text')),
-		array('recaptcha_public_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_PUBLIC_KEY'), '', array('text')),
+		array('recaptcha_public_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA_PUBLIC_KEY'), '', array('text')),
 		array('recaptcha_success_score', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SUCCESS_SCORE'), '60', array('text')),
 		array('recaptcha3_show_rights', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SHOW_RIGHTS'), 'Y', array('checkbox')),
 	);
 
+	$arRecaptchaOptions2 = array(
+		array('recaptcha2_public_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA_PUBLIC_KEY'), '', array('text')),
+	);
+
 	if ($MOD_RIGHT >= 'Y' || $USER->IsAdmin()) {
+		$currentType = COption::GetOptionString($module_id, 'type');
 
 		if ($REQUEST_METHOD == 'GET'
 				&& strlen($RestoreDefaults) > 0
@@ -61,8 +66,10 @@ if($MOD_RIGHT>='R') {
 				&& strlen($Update) > 0
 				&& check_bitrix_sessid()
 		) {
-			if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA3') {
+			if ($currentType === 'RECAPCHA3') {
 				$arOptionsForSet = array_merge($arAllOptions, $arRecaptchaOptions);
+			} else if ($currentType === 'RECAPCHA2') {
+				$arOptionsForSet = array_merge($arAllOptions, $arRecaptchaOptions2);
 			} else {
 				$arOptionsForSet = $arAllOptions;
 			}
@@ -88,11 +95,17 @@ if($MOD_RIGHT>='R') {
 		}
 	}
 
+	$currentType = COption::GetOptionString($module_id, 'type');
+
 	$aTabs = array();
 	$aTabs[] = array('DIV' => 'set', 'TAB' => Loc::getMessage('MAIN_TAB_SET'), 'ICON' => 'wiki_settings', 'TITLE' => Loc::getMessage('MAIN_TAB_TITLE_SET'));
 
-	if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA3') {
+	if ($currentType === 'RECAPCHA3') {
 		$aTabs[] = array('DIV' => 'recaptcha3', 'TAB' => Loc::getMessage('RECAPTCHA3_TAB_SET'), 'ICON' => 'wiki_settings', 'TITLE' => Loc::getMessage('RECAPTCHA3_TAB_SET'));
+	}
+
+	if ($currentType === 'RECAPCHA2') {
+		$aTabs[] = array('DIV' => 'recaptcha2', 'TAB' => Loc::getMessage('RECAPTCHA2_TAB_SET'), 'ICON' => 'wiki_settings', 'TITLE' => Loc::getMessage('RECAPTCHA2_TAB_SET'));
 	}
 
 	$aTabs[] = array('DIV' => 'rights', 'TAB' => Loc::getMessage('MAIN_TAB_RIGHTS'), 'ICON' => 'wiki_settings', 'TITLE' => Loc::getMessage('MAIN_TAB_TITLE_RIGHTS'));
@@ -101,15 +114,20 @@ if($MOD_RIGHT>='R') {
 	$tabControl->Begin();
 	?>
 	<form method="POST"
-				action="<? echo $APPLICATION->GetCurPage() ?>?mid=<?= htmlspecialcharsbx($mid) ?>&lang=<?= LANGUAGE_ID ?>"
+				action="<?=$APPLICATION->GetCurPage() ?>?mid=<?= htmlspecialcharsbx($mid) ?>&lang=<?= LANGUAGE_ID ?>"
 				name="wiki_settings">
-		<?
+		<?php
 		$tabControl->BeginNextTab();
 		__AdmSettingsDrawList('pogudin.email', $arAllOptions);
 
-		if (COption::GetOptionString($module_id, 'type') === 'RECAPCHA3') {
+		if ($currentType === 'RECAPCHA3') {
 			$tabControl->BeginNextTab();
 			__AdmSettingsDrawList('pogudin.email', $arRecaptchaOptions);
+		}
+
+		if ($currentType === 'RECAPCHA2') {
+			$tabControl->BeginNextTab();
+			__AdmSettingsDrawList('pogudin.email', $arRecaptchaOptions2);
 		}
 
 		$tabControl->BeginNextTab();
@@ -131,7 +149,7 @@ if($MOD_RIGHT>='R') {
 		<input type="button" <? if ($MOD_RIGHT < 'W') echo "disabled" ?>
 			title="<? echo Loc::getMessage('MAIN_HINT_RESTORE_DEFAULTS') ?>" OnClick="RestoreDefaults();"
 			value="<? echo Loc::getMessage('MAIN_RESTORE_DEFAULTS') ?>">
-		<? $tabControl->End(); ?>
+		<?php $tabControl->End(); ?>
 	</form>
-	<?
+	<?php
 }

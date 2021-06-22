@@ -37,13 +37,14 @@ if($MOD_RIGHT>='R') {
 	);
 
 	$arRecaptchaOptions = array(
-		array('recaptcha_private_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_PRIVATE_KEY'), '', array('text')),
+		array('recaptcha_private_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA_PRIVATE_KEY'), '', array('text')),
 		array('recaptcha_public_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA_PUBLIC_KEY'), '', array('text')),
 		array('recaptcha_success_score', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SUCCESS_SCORE'), '60', array('text')),
 		array('recaptcha3_show_rights', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA3_SHOW_RIGHTS'), 'Y', array('checkbox')),
 	);
 
 	$arRecaptchaOptions2 = array(
+		array('recaptcha2_private_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA_PRIVATE_KEY'), '', array('text')),
 		array('recaptcha2_public_key', Loc::getMessage('POGUDIN_EMAIL_OPTIONS_RECAPTCHA_PUBLIC_KEY'), '', array('text')),
 	);
 

@@ -15,6 +15,7 @@ Class Recaptcha2 implements SpamEngine
 	static function initOptions()
 	{
 		self::$settings = [
+			'PRIVATE_KEY' => Option::get(self::MODULE_ID, 'recaptcha2_private_key', ''),
 			'PUBLIC_KEY' => Option::get(self::MODULE_ID, 'recaptcha2_public_key', ''),
 		];
 	}
